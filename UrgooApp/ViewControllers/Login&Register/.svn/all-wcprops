@@ -1,0 +1,173 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/urgoo/!svn/ver/3275/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register
+END
+EditTextViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/EditTextViewController.h
+END
+ServiceAgreementViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/ServiceAgreementViewController.m
+END
+EditTextViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/EditTextViewController.m
+END
+SettingPasswordViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/SettingPasswordViewController.h
+END
+UGNavigationController.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/UGNavigationController.h
+END
+SendEmailViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/SendEmailViewController.h
+END
+BaseLoginViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/BaseLoginViewController.h
+END
+BasicInfomationViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/BasicInfomationViewController.h
+END
+SettingPasswordViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/urgoo/!svn/ver/3275/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/SettingPasswordViewController.m
+END
+SignUpViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/SignUpViewController.h
+END
+UGNavigationController.m
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/UGNavigationController.m
+END
+SendEmailViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/SendEmailViewController.m
+END
+ClientChangePasswordViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/ClientChangePasswordViewController.h
+END
+CityViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/CityViewController.h
+END
+ChangePasswordViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/ChangePasswordViewController.h
+END
+BaseLoginViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/BaseLoginViewController.m
+END
+LoginViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/LoginViewController.h
+END
+ForgetPasswordViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/ForgetPasswordViewController.h
+END
+BasicInfomationViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/BasicInfomationViewController.m
+END
+SignUpViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/SignUpViewController.m
+END
+ClientChangePasswordViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/urgoo/!svn/ver/2525/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/ClientChangePasswordViewController.m
+END
+CityViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/CityViewController.m
+END
+ChangePasswordViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/urgoo/!svn/ver/2367/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/ChangePasswordViewController.m
+END
+LoginViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/urgoo/!svn/ver/3099/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/LoginViewController.m
+END
+RegisterSuccessViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/RegisterSuccessViewController.h
+END
+ForgetPasswordViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/urgoo/!svn/ver/3263/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/ForgetPasswordViewController.m
+END
+RegisterSuccessViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/RegisterSuccessViewController.m
+END
+ServiceAgreementViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/Login&Register/ServiceAgreementViewController.h
+END

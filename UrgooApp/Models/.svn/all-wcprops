@@ -1,0 +1,209 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/urgoo/!svn/ver/3377/Apps/IOS/UrgooParentsApp/UrgooApp/Models
+END
+MesgAccountModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/MesgAccountModel.h
+END
+BodyInformationModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/BodyInformationModel.m
+END
+BaseModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/BaseModel.h
+END
+AdvanceDateList.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/urgoo/!svn/ver/2639/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AdvanceDateList.h
+END
+IsAdvanceRelation.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/urgoo/!svn/ver/2505/Apps/IOS/UrgooParentsApp/UrgooApp/Models/IsAdvanceRelation.h
+END
+MesgAccountModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/MesgAccountModel.m
+END
+BaseModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/BaseModel.m
+END
+IsAdvanceRelation.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/urgoo/!svn/ver/2505/Apps/IOS/UrgooParentsApp/UrgooApp/Models/IsAdvanceRelation.m
+END
+AppUpDataModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/urgoo/!svn/ver/2365/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AppUpDataModel.h
+END
+AdvanceDateList.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AdvanceDateList.m
+END
+AppUpDataModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AppUpDataModel.m
+END
+AdvanceDetailModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AdvanceDetailModel.h
+END
+AdvanceCounselorInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/urgoo/!svn/ver/2674/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AdvanceCounselorInfo.h
+END
+PayOrderDtlModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/urgoo/!svn/ver/3065/Apps/IOS/UrgooParentsApp/UrgooApp/Models/PayOrderDtlModel.h
+END
+AdvanceDetailModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AdvanceDetailModel.m
+END
+AdvanceCounselorInfo.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AdvanceCounselorInfo.m
+END
+AssistantsModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AssistantsModel.h
+END
+PayOrderDtlModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/PayOrderDtlModel.m
+END
+AssistantsModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AssistantsModel.m
+END
+UGCityModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/UGCityModel.h
+END
+AdanceTimeList.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/urgoo/!svn/ver/3302/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AdanceTimeList.h
+END
+CounselorListModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/urgoo/!svn/ver/2890/Apps/IOS/UrgooParentsApp/UrgooApp/Models/CounselorListModel.h
+END
+UGCityModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/UGCityModel.m
+END
+CounselorListModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/CounselorListModel.m
+END
+AdanceTimeList.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AdanceTimeList.m
+END
+InformationModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/InformationModel.h
+END
+MsgModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/MsgModel.h
+END
+InformationModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/InformationModel.m
+END
+MsgModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/MsgModel.m
+END
+AccountModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AccountModel.h
+END
+AdvanceListModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AdvanceListModel.h
+END
+AccountModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AccountModel.m
+END
+AdvanceListModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/AdvanceListModel.m
+END
+BodyInformationModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Models/BodyInformationModel.h
+END

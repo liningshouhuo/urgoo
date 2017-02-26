@@ -1,0 +1,1089 @@
+//
+//  UGLiveVideoDetailViewController.m
+//  UrgooApp
+//
+//  Created by IOS开发者 on 16/7/18.
+//  Copyright © 2016年 Urgoo. All rights reserved.
+//
+
+#import "UGLiveVideoDetailViewController.h"
+#import "UGLiveVideodetailHeadView.h"
+#import "UGLiveVideoDetailOneCell.h"
+#import "UGLiveVideoDetailTwoCell.h"
+#import "UGLiveVideoDetailThreeCell.h"
+#import "LiveVideoModel.h"
+#import <AVFoundation/AVFoundation.h>
+#import <AVKit/AVKit.h>
+#import "LiveVideoDetailModel.h"
+#import "LiveVideoCommentModel.h"
+#import "UGCounselorDetailNewViewController.h"
+#import "UGLiveVideoesViewController.h"
+#import "UGCounselorDetailNewViewController.h"
+#import "ShareDetailsModel.h"
+#import "UGScheduleDtlViewController.h"
+#import "AdvanceRelationsModel.h"
+#import "UGSchedulingViewController.h"
+#import "MalertView.h"
+#import "ShareXinLangWeiBoVC.h"
+
+//share
+#import <ShareSDK/ShareSDK.h>
+#import <ShareSDKConnector/ShareSDKConnector.h>
+#import <ShareSDKUI/ShareSDK+SSUI.h>
+
+
+@interface UGLiveVideoDetailViewController ()<UITableViewDelegate,UITableViewDataSource,UIActionSheetDelegate>
+{
+    UIView *editView;
+    UITextField *commentText;
+    UIButton *commentButn;
+    
+    AVPlayer *player;
+    AVPlayerViewController *playerVC;
+    
+}
+
+@property (strong, nonatomic) MalertView *alert;
+@property (nonatomic,strong) UITableView *tableView;
+@property (nonatomic,strong) UIView      *buttomView;
+@property (nonatomic,strong) UGLiveVideodetailHeadView *liveVideodetailHeadView;
+@property (nonatomic,strong) LiveVideoModel        *liveVideoModel;
+@property (nonatomic,strong) ShareDetailsModel     *shareDetailsModel;
+@property (nonatomic,strong) AdvanceRelationsModel *isRelationsModel;
+@property (nonatomic,strong) NSMutableArray *pastImageArr;
+@property (nonatomic,strong) NSMutableArray *pastLiveIdArr;
+@property (nonatomic,strong) NSMutableArray *commentArr;
+@property (nonatomic,copy)   NSString       *buttonSate;
+@property (nonatomic,copy)   NSString       *zoomNo;
+@property (nonatomic,copy)   NSString       *videoURL;
+@property (nonatomic,assign) NSInteger       pageNum;
+@property (nonatomic,copy)   NSString       *isSign;
+@property (nonatomic,copy)   NSString       *timeIsOn;
+
+@end
+
+@implementation UGLiveVideoDetailViewController
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [commentText resignFirstResponder];
+    [[NSNotificationCenter defaultCenter] removeObserver:UIKeyboardWillChangeFrameNotification];
+    [[NSNotificationCenter defaultCenter] removeObserver:UIKeyboardWillHideNotification];
+    
+    [_liveVideodetailHeadView.timer invalidate];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self.navigationController.navigationBar setTranslucent:NO];
+}
+
+-(void)backAction
+{
+    if (_isJPush) {
+        [[AppDelegate sharedappDelegate] showTabBar];
+        [AppDelegate sharedappDelegate].tabbar.selectedIndex = 1;
+    }else{
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.view.backgroundColor = RGB(238, 238, 238);
+    
+    [self setCustomTitle:@"优顾直播"];
+    
+    [self addRightButton];
+
+    [self getNetDataZoomLiveDetail];
+    [self getNetDataZoomLiveDetailPassed];
+    [self getNetDataZoomLiveDetailCommentListPage:@"0"];
+    
+    [self initUI];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboard_Show:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboard_Hidden:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+-(void)addRightButton
+{
+    //视频预约
+    UIBarButtonItem *backItem =[[UIBarButtonItem alloc]initWithImage:[[UIImage imageNamed:@"click_share"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] landscapeImagePhone:nil style:UIBarButtonItemStyleDone target:self action:@selector(clickRightBtn)];
+    self.navigationItem.rightBarButtonItem = backItem;
+}
+
+#pragma mark - share
+-(void)clickRightBtn
+{
+    DLog(@"点击share按钮");
+
+//    UGCounselorDetailNewViewController *counselorDetailNewVC = [[UGCounselorDetailNewViewController alloc] init];
+//    [counselorDetailNewVC shareWeiXin:_shareDetailsModel];
+    [self shareWeiXin];
+    
+}
+
+-(void)initUI
+{
+    _pastImageArr  = [NSMutableArray array];
+    _pastLiveIdArr = [NSMutableArray array];
+    _commentArr    = [NSMutableArray array];
+    _pageNum       = 0;
+    
+    _tableView = [[UITableView alloc] init];
+    _tableView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight-64-44);
+    _tableView.delegate = self;
+    _tableView.dataSource = self;
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view addSubview:_tableView];
+    if ([User_Default objectForKey:@"activityframe"]) {
+        _tableView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight-44-64);
+    }
+    if (_byHome) {
+        //_tableView.frame = CGRectMake(0, 64, kScreenWidth, kScreenHeight-44-64);
+    }
+    if (_byGuanZhu2) {
+        _tableView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight-44-64);
+    }
+    
+    [self kAddButtomView:@"3"];
+    
+    _liveVideodetailHeadView = [[UGLiveVideodetailHeadView alloc] init];
+    _liveVideodetailHeadView.frame = CGRectMake(0, 0, kScreenWidth, 375);
+    _tableView.tableHeaderView = _liveVideodetailHeadView;
+    
+    typeof(self) weakSelf = self;
+    _liveVideodetailHeadView.videoBlock = ^(LiveVideoModel *model,NSString *timeIsUp,NSString *timeState){
+        
+        if ([model.status isEqualToString:@"1"]) {
+            
+            weakSelf.zoomNo = model.zoomNo;
+            //ZoomVideo
+            if (timeIsUp && [weakSelf.isSign isEqualToString:@"1"]) {
+                DLog(@"****进入直播ZoomVideo***");
+                [weakSelf addMeeting:model.zoomNo];
+            }
+        
+            //UpUI
+            if ([timeState isEqualToString:@"1"] && [weakSelf.isSign isEqualToString:@"1"]) {//1.进入直播  2.结束
+                [weakSelf.buttomView removeFromSuperview];
+                [weakSelf kAddButtomView:@"1"];
+            }else if ([timeState isEqualToString:@"1"] && ![weakSelf.isSign isEqualToString:@"1"]){
+                [weakSelf.buttomView removeFromSuperview];
+                [weakSelf kAddButtomView:@"3"];
+            }else if ([timeState isEqualToString:@"2"]){
+                [weakSelf.buttomView removeFromSuperview];
+                [weakSelf kAddButtomView:@"2"];
+            }else if ([timeState isEqualToString:@"1"]){
+                weakSelf.timeIsOn = @"1";
+            }
+            
+        }else if ([model.status isEqualToString:@"3"]){//查看回播
+            
+            weakSelf.videoURL = model.video;
+            [weakSelf.buttomView removeFromSuperview];
+            [weakSelf kAddButtomView:@"5"];
+            if (model.video.length > 1 && timeIsUp) {
+                [weakSelf KAddAVPlayerViewControllerURL:model.video];
+            }
+            
+        }
+        else{
+            [weakSelf.buttomView removeFromSuperview];
+            [weakSelf kAddButtomView:@"2"];
+        }
+         
+        
+    };
+    
+    _liveVideodetailHeadView.personDataBlock = ^(NSString *counselorId){
+        
+        DLog(@"点击“查看嘉宾详情”");
+        if (weakSelf.byHome) {//由于导航条的原因，再改进
+            if ([weakSelf.byHome isEqual:@"001"]) {
+                //首页轮播进入
+                UGCounselorDetailNewViewController *counselorDetailNewVC = [[UGCounselorDetailNewViewController alloc] init];
+                counselorDetailNewVC.counselorId = counselorId;
+                counselorDetailNewVC.byTabBar = @"";
+                [weakSelf pushToNextViewController:counselorDetailNewVC];
+            }else{
+                //除首页轮播进入之外
+                [weakSelf.navigationController popViewControllerAnimated:YES];
+            }
+            
+        }else{
+            UGCounselorDetailNewViewController *counselorDetailNewVC = [[UGCounselorDetailNewViewController alloc] init];
+            counselorDetailNewVC.counselorId = counselorId;
+            counselorDetailNewVC.byTabBar = @"";
+            [weakSelf pushToNextViewController:counselorDetailNewVC];
+        }
+        
+        
+    };
+    
+}
+
+-(void)shareWeiXin
+{
+    
+    [_alert removeFromSuperview];
+    typeof(self) weakSelf = self;
+    
+    _alert = [[MalertView alloc] initWithImageArrOfButton:@[@"share_weixin_icon",@"share_weixinFriend_icon",@"share_weibo_icon"]];
+    [[UIApplication sharedApplication].keyWindow addSubview:_alert];
+    
+    _alert.selectBlock = ^(NSInteger index){
+        [weakSelf malertItemSelect:index];
+    };
+    
+    [_alert showAlert];
+}
+
+- (void)malertItemSelect:(NSInteger)index
+{
+    NSLog(@"点击了－－－%ld",index);
+    NSString *descripStr = _shareDetailsModel.text;
+    NSString *titleStr = _shareDetailsModel.title;
+    
+    _alert.hidden = YES ;
+    typeof(self) weakSelf = self;
+    NSArray *imageArray;
+    imageArray = @[_shareDetailsModel.pic];
+    
+    NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
+    NSString * strUrl = [NSString stringWithFormat:@"%@%@",UG_HOST,_shareDetailsModel.url];
+    
+    [shareParams SSDKSetupShareParamsByText:descripStr
+                                     images:imageArray
+                                        url:[NSURL URLWithString:strUrl]
+                                      title: titleStr
+                                       type:SSDKContentTypeAuto];
+    
+    if (index == 110) {
+        //微信
+        DLog(@"微信好友分享");
+        
+        [ShareSDK share:SSDKPlatformSubTypeWechatSession parameters:shareParams onStateChanged:^(SSDKResponseState state, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error) {
+            
+            [weakSelf SSDKResponseState:state andError:error];
+        }];
+        
+        
+    }else if (index == 111){
+        //朋友圈
+        DLog(@"微信朋友圈分享");
+        
+        [ShareSDK share:SSDKPlatformSubTypeWechatTimeline parameters:shareParams onStateChanged:^(SSDKResponseState state, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error) {
+            
+            [weakSelf SSDKResponseState:state andError:error];
+        }];
+        
+        
+    }else if (index == 112){
+        //新浪
+        
+        if ([WeiboSDK isWeiboAppInstalled]) {
+            
+            if ([WeiboSDK isCanShareInWeiboAPP]) {
+                [self weiboAppInstalledShare];
+            }else{
+                DLog(@"检查用户‘不可以’通过微博客户端进行分享");
+            }
+            
+        }else{
+            DLog(@"未安装客户端");
+            ShareXinLangWeiBoVC *vc = [[ShareXinLangWeiBoVC alloc] init];
+            vc.titl = _shareDetailsModel.title;
+            vc.desc = _shareDetailsModel.text;
+            vc.picshare = _shareDetailsModel.pic;
+            vc.urlShare = strUrl;
+            [self presentViewController:vc animated:YES completion:nil];
+        }
+        
+    }
+}
+
+-(void)weiboAppInstalledShare
+{
+    typeof(self) weakSelf = self;
+    DLog(@"新浪微博客户端分享");
+    NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
+    NSString * strUrl = [NSString stringWithFormat:@"%@%@",UG_HOST,_shareDetailsModel.url];
+    // 定制新浪微博的分享内容
+    [shareParams SSDKSetupSinaWeiboShareParamsByText:[NSString stringWithFormat:@"%@ %@",_shareDetailsModel.text,[NSURL URLWithString:strUrl]]title:nil image:[NSURL URLWithString:_shareDetailsModel.pic] url:nil latitude:0 longitude:0 objectID:nil type:SSDKContentTypeAuto];
+    
+    //调用客户端
+    [shareParams SSDKEnableUseClientShare];
+    
+    [ShareSDK share:SSDKPlatformTypeSinaWeibo parameters:shareParams onStateChanged:^(SSDKResponseState state, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error) {
+        
+        [weakSelf SSDKResponseState:state andError:error];
+        
+    }];
+    
+}
+
+-(void)SSDKResponseState:(SSDKResponseState)state andError:(NSError *)error
+{
+    switch (state) {
+        case SSDKResponseStateSuccess:
+        {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"分享成功"
+                                                                message:nil
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"确定"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+            break;
+        }
+        case SSDKResponseStateFail:
+        {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"分享失败"
+                                                                message:[NSString stringWithFormat:@"%@", error]
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"确定"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+            break;
+        }
+        case SSDKResponseStateCancel:
+        {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"分享已取消"
+                                                                message:nil
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"确定"
+                                                      otherButtonTitles:nil];
+            [alertView show];
+            break;
+        }
+        default:
+            break;
+    }
+    
+}
+
+
+#pragma  mark - UITableViewdelegate
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return  2;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == 0) {
+        UGLiveVideoDetailOneCell *cell = (UGLiveVideoDetailOneCell *)[self tableView:self.tableView cellForRowAtIndexPath:indexPath];
+        return cell.frame.size.height;
+    }/*
+    else if(indexPath.row == 1){
+        UGLiveVideoDetailTwoCell *cell = (UGLiveVideoDetailTwoCell *)[self tableView:self.tableView cellForRowAtIndexPath:indexPath];
+        return cell.frame.size.height;
+    }*/
+      else if(indexPath.row == 1){
+        UGLiveVideoDetailThreeCell *cell = (UGLiveVideoDetailThreeCell *)[self tableView:self.tableView cellForRowAtIndexPath:indexPath];
+        return cell.frame.size.height;
+    }
+    return 0;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *indentifer = @"cell";
+    //static NSString *indentiferTwo = @"cellTwo";
+    static NSString *indentiferThree = @"cellThree";
+    if (indexPath.row == 0) {
+        
+        UGLiveVideoDetailOneCell *cell = [tableView dequeueReusableCellWithIdentifier:indentifer];
+        if (cell == nil) {
+            cell = [[UGLiveVideoDetailOneCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:indentifer];
+        }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        NSArray *subViews = cell.contentView.subviews;
+        for (UIView *view in subViews) {
+            [view removeFromSuperview];
+        }
+        
+        if (_liveVideoModel) {
+            [cell initUI:_liveVideoModel];
+        }
+        
+        [self liveVideoDetailOneCell:cell];
+        
+        return  cell;
+        
+    }/*
+    else if(indexPath.row == 1) {
+        
+        UGLiveVideoDetailTwoCell *cell = [tableView dequeueReusableCellWithIdentifier:indentiferTwo];
+        if (cell == nil) {
+            cell = [[UGLiveVideoDetailTwoCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:indentiferTwo];
+        }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        NSArray *subViews = cell.contentView.subviews;
+        for (UIView *view in subViews) {
+            [view removeFromSuperview];
+        }
+        
+        if (_pastImageArr) {
+            [cell initUI:_pastImageArr];
+        }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        [self liveVideoDetailTwoCell:cell];
+        
+        return  cell;
+        
+    }*/
+    else if (indexPath.row == 1){
+        
+        
+        UGLiveVideoDetailThreeCell *cell = [tableView dequeueReusableCellWithIdentifier:indentiferThree];
+        if (cell == nil) {
+            cell = [[UGLiveVideoDetailThreeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:indentiferThree];
+        }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        NSArray *subViews = cell.contentView.subviews;
+        for (UIView *view in subViews) {
+            [view removeFromSuperview];
+        }
+        
+        if (_commentArr) {
+            [cell initUI:_commentArr];
+        }
+        [self liveVideoDetailThreeCell:cell];
+        
+        return  cell;
+    }
+    
+    UITableViewCell *cell;
+    return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [commentText resignFirstResponder];
+    _buttomView.hidden= NO;
+    editView.hidden = YES;
+    
+    if (indexPath.row == 1) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [commentText resignFirstResponder];
+    _buttomView.hidden= NO;
+    editView.hidden = YES;
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [User_Default removeObjectForKey:@"downUpData"];
+}
+
+
+-(void)liveVideoDetailOneCell:(UGLiveVideoDetailOneCell *)cell
+{
+    cell.advanceBlock = ^{
+        
+        if ([_isRelationsModel.isAdvanceRelation isEqualToString:@"0"]) {
+            
+            UGSchedulingViewController * vc = [[UGSchedulingViewController alloc]init];
+            vc.counselorId = _liveVideoModel.targetId;
+            vc.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:vc animated:YES];
+            
+        }else if ([_isRelationsModel.isAdvanceRelation isEqualToString:@"1"]){
+            
+            UGScheduleDtlViewController *scheduleDtlVC = [[UGScheduleDtlViewController alloc] init];
+            scheduleDtlVC.index = [_isRelationsModel.status intValue];
+            scheduleDtlVC.type  = _isRelationsModel.type;
+            scheduleDtlVC.advanceId = _isRelationsModel.advanceId;
+            [self pushToNextViewController:scheduleDtlVC];
+        }
+
+        
+    };
+}
+
+-(void)liveVideoDetailTwoCell:(UGLiveVideoDetailTwoCell *)cell
+{
+    cell.allBlock = ^(){
+        UGLiveVideoesViewController *liveVideoesVC = [[UGLiveVideoesViewController alloc] init];
+        liveVideoesVC.isPassList = YES;
+        [self pushToNextViewController:liveVideoesVC];
+    };
+    
+    cell.oneBlock = ^(NSString *number){
+
+        _liveId = _pastLiveIdArr[[number intValue]];
+        [self getNetDataZoomLiveDetail];
+        [self getNetDataZoomLiveDetailPassed];
+        _pageNum = 0;
+        [self getNetDataZoomLiveDetailCommentListPage:@"0"];
+    };
+}
+
+-(void)liveVideoDetailThreeCell:(UGLiveVideoDetailThreeCell *)cell
+{
+    typeof(self) weakSelf = self;
+    cell.addDataBlock = ^(NSString *number){
+        if ([number isEqualToString:@"0"]) {
+            weakSelf.pageNum = 0;
+            [weakSelf getNetDataZoomLiveDetailCommentListPage:@"0"];
+        }else{
+            weakSelf.pageNum += 1;
+            [weakSelf getNetDataZoomLiveDetailCommentListPage:[NSString stringWithFormat:@"%ld",weakSelf.pageNum]];
+        }
+    };
+}
+
+#pragma mark - 播放视频 AVPlayerViewController
+-(void)KAddAVPlayerViewControllerURL:(NSString *)url
+{
+    player = [AVPlayer playerWithURL:[NSURL URLWithString:url]];
+    playerVC = [[AVPlayerViewController alloc] init];
+    playerVC.player = player;
+    
+    playerVC.showsPlaybackControls = YES;
+    playerVC.view.frame = self.view.bounds;
+    //playerVC.view.frame = CGRectMake(0, 0, kScreenWidth, 250);
+    [playerVC.player play];
+    
+    [self SpeakersRemainActive];
+    
+    //[self.view addSubview:playerVC.view];
+    [self presentViewController:playerVC animated:YES completion:nil];
+}
+
+-(void)SpeakersRemainActive
+{
+    AVAudioSession* sharedSession = [AVAudioSession sharedInstance];
+    [sharedSession setCategory:AVAudioSessionCategoryAmbient error:nil];
+    
+    CFStringRef state;
+    UInt32 propertySize = sizeof(CFStringRef);
+    AudioSessionInitialize(NULL, NULL, NULL, NULL);
+    AudioSessionGetProperty(kAudioSessionProperty_AudioRoute, &propertySize, &state);
+    
+    BOOL muteSwitch = (CFStringGetLength(state) <= 0);
+    NSLog(@"Mute switch: %d",muteSwitch);
+    
+    BOOL _hasMicrophone = [sharedSession inputIsAvailable];
+    NSError* setCategoryError = nil;
+    
+    if (_hasMicrophone) {
+        
+        [sharedSession setCategory: AVAudioSessionCategoryPlayAndRecord error: &setCategoryError];
+    
+        UInt32 ASRoute = kAudioSessionOverrideAudioRoute_Speaker;
+        AudioSessionSetProperty (kAudioSessionProperty_OverrideAudioRoute,
+                                 sizeof (ASRoute),
+                                 &ASRoute
+                                 );
+    }
+    else
+        [sharedSession setCategory: AVAudioSessionCategoryPlayback error: &setCategoryError];
+    
+    if (setCategoryError)
+        NSLog(@"Error setting audio category! %@", setCategoryError);
+}
+
+
+
+#pragma mark - 底部按钮
+-(void)kAddButtomView:(NSString *)state
+{
+    _buttonSate = state;
+    DLog(@"底部按钮状态：%@",_buttonSate);
+    
+    _buttomView = [[UIView alloc] init];
+    _buttomView.frame = CGRectMake(0, kScreenHeight-44-64, kScreenWidth, 44);
+    _buttomView.hidden = NO;
+    _buttomView.layer.borderWidth = 0.6;
+    _buttomView.layer.borderColor = [UIColor colorWithHexString:@"d4d4d4"].CGColor;
+    _buttomView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_buttomView];
+    
+    if ([User_Default objectForKey:@"activityframe"]) {
+        _buttomView.frame = CGRectMake(0, kScreenHeight-44-64, kScreenWidth, 44);
+    }
+    if (_byHome) {
+        //_buttomView.frame = CGRectMake(0, kScreenHeight-44, kScreenWidth, 44);
+    }
+    if (_byGuanZhu2) {
+        _buttomView.frame = CGRectMake(0, kScreenHeight-44-64, kScreenWidth, 44);
+    }
+    
+    NSArray *titleArr;
+    if ([state isEqualToString:@"3"]) {
+       titleArr = @[@"评论",@"立即报名"];
+    }else if ([state isEqualToString:@"2"]){
+        titleArr = @[@"评论",@"已结束"];
+    }else if ([state isEqualToString:@"1"]){
+        titleArr = @[@"评论",@"进入直播"];
+    }else if ([state isEqualToString:@"4"]){
+        titleArr = @[@"评论",@"已报名"];
+    }else if ([state isEqualToString:@"5"]){
+        titleArr = @[@"评论",@"查看回播"];
+    }
+    
+    for (int i = 0; i < 2; i ++) {
+        
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame = CGRectMake(i * (kScreenWidth/2), 0, kScreenWidth/2, 44);
+        button.titleLabel.font = [UIFont systemFontOfSize:15];
+        button.tag = 300 + i;
+        [button setTitle:titleArr[i] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor colorWithHexString:@"26BDAB"] forState:UIControlStateNormal];
+        
+        [button addTarget:self action:@selector(clickButns:) forControlEvents:UIControlEventTouchUpInside];
+        if (i == 0) {//top left bottom right
+            [button setImage:[UIImage imageNamed:@"emidet_button_icon"] forState:UIControlStateNormal];
+            [button setImageEdgeInsets:UIEdgeInsetsMake(10, -20, 10, 0)];
+        }
+        
+        if ([state isEqualToString:@"2"] && i == 1) {
+            [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        }else if ([state isEqualToString:@"4"] && i == 1){
+            [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        }
+        
+        [_buttomView addSubview:button];
+        
+    }
+    
+    UIView *bLine = [[UIView alloc] init];
+    bLine.frame = CGRectMake(kScreenWidth/2, 9, 0.6, 25);
+    bLine.backgroundColor = [UIColor colorWithHexString:@"d4d4d4"];
+    [_buttomView addSubview:bLine];
+
+}
+
+-(void)clickButns:(UIButton *)button
+{
+    if (button.tag == 300) {
+       
+        DLog(@"点击“评论”");
+        [self kAddEditView];
+        
+    }else if (button.tag == 301){
+        
+        if ([_buttonSate isEqualToString:@"1"] && [self.isSign isEqualToString:@"1"]) {
+            //进入直播
+            if (self.zoomNo) {
+                [self addMeeting:self.zoomNo];
+            }
+        }else if ([_buttonSate isEqualToString:@"2"]){
+            //结束
+            
+        }else if ([_buttonSate isEqualToString:@"3"]){
+            //报名
+            [self getNetDataZoomLiveDetailAddActivitySign];
+        }else if ([_buttonSate isEqualToString:@"5"]){
+            //回播
+            if (self.videoURL) {
+                [self KAddAVPlayerViewControllerURL:self.videoURL];
+            }
+        }
+    }
+}
+
+-(void)kAddEditView{
+    
+    _buttomView.hidden = YES;
+    
+    editView = [[UIView alloc] init];
+    editView.frame = CGRectMake(0, kScreenHeight-64-44, kScreenWidth, 44);
+    editView.hidden = NO;
+    editView.layer.borderWidth = 0.6;
+    editView.layer.borderColor = [UIColor colorWithHexString:@"d4d4d4"].CGColor;
+    editView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:editView];
+    
+    commentText = [[UITextField alloc] init];
+    commentText.frame = CGRectMake(5, 5, kScreenWidth-5-65, 34);
+    commentText.layer.borderWidth = 0.6;
+    commentText.layer.borderColor = [UIColor colorWithHexString:@"d4d4d4"].CGColor;
+    [editView addSubview:commentText];
+    
+    commentButn = [UIButton buttonWithType:UIButtonTypeCustom];
+    commentButn.frame = CGRectMake(commentText.width+10, 5, 55, 34);
+    commentButn.titleLabel.font = [UIFont systemFontOfSize:15];
+    commentButn.backgroundColor = [UIColor colorWithHexString:@"26BDAB"];
+    commentButn.layer.cornerRadius = 6;
+    commentButn.clipsToBounds = YES;
+    [commentButn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [commentButn setTitle:@"发送" forState:UIControlStateNormal];
+    [commentButn addTarget:self action:@selector(clickSend) forControlEvents:UIControlEventTouchUpInside];
+    [editView addSubview:commentButn];
+    
+    [commentText becomeFirstResponder];
+}
+
+-(void)clickSend
+{
+    editView.hidden = YES;
+    _buttomView.hidden = NO;
+    [commentText resignFirstResponder];
+    
+    if (commentText.text.length > 0) {
+        
+        [self.tableView scrollToRowAtIndexPath:
+         [NSIndexPath indexPathForRow:1 inSection:0]
+                              atScrollPosition: UITableViewScrollPositionBottom
+                                      animated:YES];
+        
+        [self getNetDataZoomLiveDetailCommentContent];
+        
+    }else{
+        [self showSVString:@"评论内容不能为空！"];
+    }
+}
+
+
+
+#pragma mark - 获取网络数据  直播详情
+-(void)getNetDataZoomLiveDetail{
+    
+    __weak typeof(self) weakSelf = self;
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"token"] = kToken;
+    params[@"liveId"] = _liveId;
+    
+    DLog(@"%@?token=%@&liveId=%@",UG_ZoomLiveDetail_URL,kToken,_liveId);
+    
+    [HttpClientManager postAsyn:UG_ZoomLiveDetail_URL params:params success:^(id json) {
+        
+        AssistantsService *service=[[AssistantsService alloc] init];
+        MsgModel *msg=(MsgModel *)[service getHeaderMsgWithDict:json[@"header"]];
+        
+        if ([msg.code isEqualToString:@"200"]) {
+            
+            _liveVideoModel  = [LiveVideoModel mj_objectWithKeyValues:json[@"body"][@"liveDetail"]];
+            
+            _isRelationsModel = [AdvanceRelationsModel mj_objectWithKeyValues:json[@"body"][@"advanceRelation"]];
+            
+            _shareDetailsModel = [ShareDetailsModel mj_objectWithKeyValues:json[@"body"][@"shareDetail"]];
+            
+            self.zoomNo = _liveVideoModel.zoomNo;
+            
+            if (_liveVideoModel) {
+                weakSelf.isSign = _liveVideoModel.isSign;
+                if ([_liveVideoModel.isSign isEqualToString:@"1"]) {
+                    [weakSelf.buttomView removeFromSuperview];
+                    [weakSelf kAddButtomView:@"4"];
+                }
+                [_liveVideodetailHeadView initUI:_liveVideoModel];
+                [self.tableView reloadData];
+            }
+            
+        }else if ([msg.code isEqualToString:@"400"]) {
+            [weakSelf showSVErrorString:msg.message];
+        }
+        
+    } failure:^(NSError *error) {
+        [weakSelf showSVErrorString:@"网络请求超时, 请稍后再试！"];
+    }];
+    
+}
+
+#pragma mark - 获取网络数据  回顾
+-(void)getNetDataZoomLiveDetailPassed{
+    
+    __weak typeof(self) weakSelf = self;
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"token"] = kToken;
+    params[@"page"] = @"0";
+    params[@"liveId"] = _liveId;
+    
+    DLog(@"%@?token=%@&page=%@",UG_ZoomLiveDetailPassed_URL,kToken,@"0");
+    
+    [HttpClientManager postAsyn:UG_ZoomLiveDetailPassed_URL params:params success:^(id json) {
+        
+        AssistantsService *service=[[AssistantsService alloc] init];
+        MsgModel *msg=(MsgModel *)[service getHeaderMsgWithDict:json[@"header"]];
+        
+        if ([msg.code isEqualToString:@"200"]) {
+            
+            NSArray *liveListArr  = [LiveVideoDetailModel mj_objectArrayWithKeyValuesArray:json[@"body"][@"liveList"]];
+            
+            _pastImageArr  = [NSMutableArray array];
+            _pastLiveIdArr = [NSMutableArray array];
+            for (LiveVideoDetailModel *model in liveListArr) {
+                [_pastImageArr addObject:model.masterPic];
+                [_pastLiveIdArr addObject:model.liveId];
+            }
+            
+            [self.tableView reloadData];
+            
+        }else if ([msg.code isEqualToString:@"400"]) {
+            [weakSelf showSVErrorString:msg.message];
+        }
+        
+    } failure:^(NSError *error) {
+        [weakSelf showSVErrorString:@"网络请求超时, 请稍后再试！"];
+    }];
+    
+}
+
+#pragma mark - 获取网络数据  评论
+-(void)getNetDataZoomLiveDetailCommentListPage:(NSString *)page
+{
+    
+    __weak typeof(self) weakSelf = self;
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"token"]  = kToken;
+    params[@"page"]   = page;
+    params[@"liveId"] = _liveId;//_liveId
+    
+    DLog(@"%@?token=%@&page=%@&liveId=%@",UG_ZoomLiveDetailCommentList_URL,kToken,@"0",_liveId);
+    
+    [HttpClientManager postAsyn:UG_ZoomLiveDetailCommentList_URL params:params success:^(id json) {
+        
+        AssistantsService *service=[[AssistantsService alloc] init];
+        MsgModel *msg=(MsgModel *)[service getHeaderMsgWithDict:json[@"header"]];
+        
+        if ([msg.code isEqualToString:@"200"]) {
+            
+            NSArray *commentArray  = [LiveVideoCommentModel mj_objectArrayWithKeyValuesArray:json[@"body"][@"liveCommentList"]];
+            
+            if (commentArray) {
+                if ([page isEqualToString:@"0"]) {
+                    [_commentArr removeAllObjects];
+                    [_commentArr addObjectsFromArray:commentArray];
+                    [User_Default removeObjectForKey:@"downUpData"];
+                }else{
+                    [_commentArr addObjectsFromArray:commentArray];
+                }
+                [self.tableView headerEndRefreshingWithResult:JHRefreshResultSuccess];
+                [self.tableView footerEndRefreshing];
+                [self.tableView reloadData];
+            }
+            
+        }else if ([msg.code isEqualToString:@"400"]) {
+            [weakSelf showSVErrorString:msg.message];
+        }
+        
+    } failure:^(NSError *error) {
+        [weakSelf showSVErrorString:@"网络请求超时, 请稍后再试！"];
+    }];
+    
+}
+
+#pragma mark -  评论2
+-(void)getNetDataZoomLiveDetailCommentContent{
+    
+    __weak typeof(self) weakSelf = self;
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"token"] = kToken;
+    params[@"page"] = @"0";
+    params[@"liveId"] = _liveId;
+    params[@"content"] = commentText.text;
+    
+    DLog(@"%@?token=%@&page=0&liveId=%@&content=%@",UG_ZoomLiveDetailCommentContent_URL,kToken,_liveId,commentText.text);
+    
+    [HttpClientManager postAsyn:UG_ZoomLiveDetailCommentContent_URL params:params success:^(id json) {
+        
+        AssistantsService *service=[[AssistantsService alloc] init];
+        MsgModel *msg=(MsgModel *)[service getHeaderMsgWithDict:json[@"header"]];
+        
+        if ([msg.code isEqualToString:@"200"]) {
+            
+            [weakSelf showSVSuccessWithStatus:@"评论成功^_^"];
+            [self getNetDataZoomLiveDetailCommentListPage:@"0"];
+            
+        }else if ([msg.code isEqualToString:@"400"]) {
+            [weakSelf showSVErrorString:msg.message];
+        }
+        
+    } failure:^(NSError *error) {
+        [weakSelf showSVErrorString:@"网络请求超时, 请稍后再试！"];
+    }];
+    
+}
+
+
+#pragma mark -  bm
+-(void)getNetDataZoomLiveDetailAddActivitySign{
+    
+    __weak typeof(self) weakSelf = self;
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"token"] = kToken;
+    params[@"liveId"] = _liveId;
+    
+    DLog(@"%@?token=%@&liveId=%@",UG_ZoomLiveDetailAddActivitySign_URL,kToken,_liveId);
+    
+    [HttpClientManager postAsyn:UG_ZoomLiveDetailAddActivitySign_URL params:params success:^(id json) {
+        
+        AssistantsService *service=[[AssistantsService alloc] init];
+        MsgModel *msg=(MsgModel *)[service getHeaderMsgWithDict:json[@"header"]];
+        
+        if ([msg.code isEqualToString:@"200"]) {
+            
+            if ([json[@"body"][@"isSign"] isEqualToString:@"2"]) {
+                weakSelf.isSign = @"1";
+                [weakSelf showSVSuccessWithStatus:@"报名成功^_^"];
+                if ([weakSelf.timeIsOn isEqualToString:@"1"]) {
+                    [weakSelf.buttomView removeFromSuperview];
+                    [weakSelf kAddButtomView:@"1"];
+                }else{
+                    [weakSelf.buttomView removeFromSuperview];
+                    [weakSelf kAddButtomView:@"4"];
+                }
+                
+            }
+            
+            [self.tableView reloadData];
+            
+        }else if ([msg.code isEqualToString:@"400"]) {
+            [weakSelf showSVErrorString:msg.message];
+        }
+        
+    } failure:^(NSError *error) {
+        [weakSelf showSVErrorString:@"网络请求超时, 请稍后再试！"];
+    }];
+    
+}
+
+
+
+
+
+#pragma mark -监听键盘的升降
+- (void)keyboard_Show:(NSNotification *)nf {
+    //获取键盘的高度
+    NSDictionary *info = [nf userInfo];
+    NSValue *value = [info objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGSize keyboardSize = [value CGRectValue].size;
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        
+        editView.frame = CGRectMake(0, kScreenHeight-44-64-keyboardSize.height, kScreenWidth, 44);
+        if (_byHome) {
+            //editView.frame = CGRectMake(0, kScreenHeight-44-keyboardSize.height, kScreenWidth, 44);
+        }
+        
+        if (_byGuanZhu2) {
+            editView.frame = CGRectMake(0, kScreenHeight-44-64-keyboardSize.height, kScreenWidth, 44);
+        }
+        
+    } completion:^(BOOL finished) {
+    }];
+}
+
+- (void)keyboard_Hidden:(NSNotification *)nf {
+    
+    [UIView animateWithDuration:0.25 animations:^{
+    } completion:^(BOOL finished) {
+       editView.frame = CGRectMake(0, kScreenHeight-44-64, kScreenWidth, 44);
+    }];
+}
+
+
+
+-(void)addMeeting:(NSString *)numId{
+    
+    [[AppDelegate sharedappDelegate] showZoomVideo];
+    
+    NSString *name;
+    if ([User_Default objectForKey:@"Growing_user_name"]) {
+        name = [User_Default objectForKey:@"Growing_user_name"];
+    }else{
+        name = @"Urgoo";
+    }
+    
+    ZoomSDKMeetingService *ms = [[ZoomSDK sharedSDK] getMeetingService];
+    if (ms)
+    {
+        ms.delegate = self;
+        ZoomSDKMeetError ret = [ms joinMeeting:numId displayName:name password:@""];
+        NSLog(@"onJoinaMeeting ret:%d", ret);
+    }
+}
+
+#pragma mark - Meeting Service Delegate
+- (void)onMeetingReturn:(ZoomSDKMeetError)error internalError:(NSInteger)internalError
+{
+    NSLog(@"onMeetingReturn:%d, internalError:%zd", error, internalError);
+}
+
+- (void)onMeetingStateChange:(ZoomSDKMeetingState)state
+{
+    NSLog(@"onMeetingStateChange:%d", state);
+    if (state == ZoomSDKMeetingState_Idle) {
+        [[AppDelegate sharedappDelegate] showTabBar];
+    }
+    
+#if 1
+    if (state == ZoomSDKMeetingState_InMeeting)
+    {
+        //For customizing the content of Invite by SMS
+        NSString *meetingID = [[ZoomSDKInviteHelper sharedInstance] meetingID];
+        NSString *smsMessage = [NSString stringWithFormat:NSLocalizedString(@"Please join meeting with ID: %@", @""), meetingID];
+        [[ZoomSDKInviteHelper sharedInstance] setInviteSMS:smsMessage];
+        
+        //For customizing the content of Copy URL
+        NSString *joinURL = [[ZoomSDKInviteHelper sharedInstance] joinMeetingURL];
+        NSString *copyURLMsg = [NSString stringWithFormat:NSLocalizedString(@"Meeting URL: %@", @""), joinURL];
+        [[ZoomSDKInviteHelper sharedInstance] setInviteCopyURL:copyURLMsg];
+    }
+#endif
+    
+#if 0
+    //For adding customize view above the meeting view
+    if (state == ZoomSDKMeetingState_InMeeting)
+    {
+        /*
+        ZoomSDKMeetingService *ms = [[ZoomSDK sharedSDK] getMeetingService];
+        UIView *v = [ms meetingView];
+        
+        UIView *sv = [[UIView alloc] initWithFrame:CGRectMake(0,0, kScreenWidth, 64)];
+        sv.backgroundColor = [UIColor clearColor];
+        [v addSubview:sv];
+        [self creatZoomVideo_button:sv];
+         */
+    }
+    
+#endif
+}
+
+-(void)creatZoomVideo_button:(UIView *)view{
+    UIButton *zoomButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    zoomButton.frame = CGRectMake(kScreenWidth- 60, 0, 40, view.height);
+    [zoomButton setTitle:@"结束" forState:UIControlStateNormal];
+    [zoomButton addTarget:self action:@selector(zoomButnClick) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:zoomButton];
+}
+-(void)zoomButnClick{
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"结束视频" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"确定" otherButtonTitles:nil, nil];
+    [sheet showInView:[[[ZoomSDK sharedSDK] getMeetingService] meetingView]];
+}
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (actionSheet.cancelButtonIndex != buttonIndex) {
+        [[[ZoomSDK sharedSDK] getMeetingService] leaveMeetingWithCmd:LeaveMeetingCmd_End];
+    }
+}
+
+
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+@end

@@ -1,0 +1,173 @@
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/urgoo/!svn/ver/3450/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController
+END
+UGScheduleTableViewCell.h
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGScheduleTableViewCell.h
+END
+UGScheduleDtlViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGScheduleDtlViewController.h
+END
+UGMyScheduleViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGMyScheduleViewController.h
+END
+UGMyScheduleCell.h
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGMyScheduleCell.h
+END
+UGEvaluationView.h
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGEvaluationView.h
+END
+UGScheduleTableViewCell.m
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/urgoo/!svn/ver/3447/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGScheduleTableViewCell.m
+END
+UGScheduleDtlViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/urgoo/!svn/ver/3308/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGScheduleDtlViewController.m
+END
+UGConsultHeadView.h
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/urgoo/!svn/ver/2645/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGConsultHeadView.h
+END
+UGMyScheduleViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/urgoo/!svn/ver/2537/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGMyScheduleViewController.m
+END
+UGAdvanCancleReasonViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/urgoo/!svn/ver/2644/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGAdvanCancleReasonViewController.h
+END
+UGEvaluationViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/urgoo/!svn/ver/2644/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGEvaluationViewController.h
+END
+UGEvaluationView.m
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGEvaluationView.m
+END
+UGMyScheduleCell.m
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/urgoo/!svn/ver/2535/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGMyScheduleCell.m
+END
+UGGotovideoHelpViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/urgoo/!svn/ver/2644/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGGotovideoHelpViewController.h
+END
+UGDateView.h
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGDateView.h
+END
+UGConsultHeadView.m
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/urgoo/!svn/ver/3447/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGConsultHeadView.m
+END
+UGEvaluationViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/urgoo/!svn/ver/2681/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGEvaluationViewController.m
+END
+UGAdvanCancleReasonViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/urgoo/!svn/ver/3431/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGAdvanCancleReasonViewController.m
+END
+UGCloseCollectionViewCell.h
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/urgoo/!svn/ver/2644/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGCloseCollectionViewCell.h
+END
+UGGotovideoHelpViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/urgoo/!svn/ver/2644/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGGotovideoHelpViewController.m
+END
+UGDateView.m
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGDateView.m
+END
+UGCloseCollectionViewCell.m
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/urgoo/!svn/ver/3431/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGCloseCollectionViewCell.m
+END
+UGscheduCollectionViewCell.h
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/urgoo/!svn/ver/2646/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGscheduCollectionViewCell.h
+END
+UGDateCollectionViewCell.h
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/urgoo/!svn/ver/2644/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGDateCollectionViewCell.h
+END
+UGSchedulingViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/urgoo/!svn/ver/2681/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGSchedulingViewController.h
+END
+UGscheduCollectionViewCell.m
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/urgoo/!svn/ver/3122/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGscheduCollectionViewCell.m
+END
+UGDateCollectionViewCell.m
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/urgoo/!svn/ver/3122/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGDateCollectionViewCell.m
+END
+UGSchedulingViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/urgoo/!svn/ver/3431/Apps/IOS/UrgooParentsApp/UrgooApp/ViewControllers/UGScheduleViewController/UGSchedulingViewController.m
+END

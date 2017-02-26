@@ -1,0 +1,20 @@
+//
+//  ThirdLibsMacro.h
+//  UrgooApp
+//
+//  Created by admin on 16/3/1.
+//  Copyright © 2016年 Urgoo. All rights reserved.
+//
+
+#ifndef ThirdLibsMacro_h
+#define ThirdLibsMacro_h
+
+#import "SVProgressHUD.h"
+#import "JHRefresh.h"
+#import "MJExtension.h"
+#import "UIImageView+WebCache.h"
+#import "AFNetworking.h"
+#import "RealReachability.h"//网络检测
+#import "WeiboSDK.h"
+
+#endif /* ThirdLibsMacro_h */

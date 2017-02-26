@@ -1,0 +1,57 @@
+//
+//  UrgooApp.pch
+//  UrgooApp
+//
+//  Created by admin on 16/2/29.
+//  Copyright © 2016年 Urgoo. All rights reserved.
+//
+#import <Availability.h>
+
+#ifndef UrgooApp_pch
+#define UrgooApp_pch
+#ifdef __OBJC__
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
+#import "ModelMacro.h"
+#import "CategoryMacro.h"
+#import "UtilsMacro.h"
+#import "VersionMacro.h"
+#import "ThirdLibsMacro.h"
+#import "URLMacro.h"
+
+#import "AppDelegate.h"
+
+#import "EaseUI.h"
+#import "EMSDKFull.h"
+
+#import "ProtocolConst.h"
+
+#import "HttpClientManager.h"
+
+#import "AssistantsService.h"
+#import "AccountService.h"
+#import "MsgModel.h"
+
+#define NSEaseLocalizedString(key, comment) [[NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"EaseUIResource" withExtension:@"bundle"]] localizedStringForKey:(key) value:@"" table:nil]
+
+#endif
+
+//极光   4f875a74d6f6e638940ec52d
+#define JGAppKey @"4f875a74d6f6e638940ec52d"
+#define JGChannel @"clientAlias"
+
+
+
+//环信
+#define HXAppKey @"urgoo2016#urgoo2016"
+#define PUSH_CER @"ios_urgoo_client_development"
+
+
+#define HXAppKey_Test @"easemob-demo#chatdemoui"
+#define PUSH_CER_Test @"chatdemoui_dev"
+
+
+
+#endif /* UrgooApp_pch */

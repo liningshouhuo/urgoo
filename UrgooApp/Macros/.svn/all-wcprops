@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/urgoo/!svn/ver/3449/Apps/IOS/UrgooParentsApp/UrgooApp/Macros
+END
+CategoryMacro.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/urgoo/!svn/ver/3362/Apps/IOS/UrgooParentsApp/UrgooApp/Macros/CategoryMacro.h
+END
+UtilsMacro.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/urgoo/!svn/ver/3362/Apps/IOS/UrgooParentsApp/UrgooApp/Macros/UtilsMacro.h
+END
+ModelMacro.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Macros/ModelMacro.h
+END
+URLMacro.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/urgoo/!svn/ver/3449/Apps/IOS/UrgooParentsApp/UrgooApp/Macros/URLMacro.h
+END
+ThirdLibsMacro.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Macros/ThirdLibsMacro.h
+END
+VersionMacro.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Macros/VersionMacro.h
+END
+ProtocolConst.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/urgoo/!svn/ver/3157/Apps/IOS/UrgooParentsApp/UrgooApp/Macros/ProtocolConst.h
+END

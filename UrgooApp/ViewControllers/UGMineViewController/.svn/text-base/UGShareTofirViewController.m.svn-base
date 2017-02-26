@@ -1,0 +1,170 @@
+//
+//  UGShareTofirViewController.m
+//  UrgooApp
+//
+//  Created by UrgooDev on 16/8/18.
+//  Copyright © 2016年 Urgoo. All rights reserved.
+//
+
+#import "UGShareTofirViewController.h"
+//share
+#import <ShareSDK/ShareSDK.h>
+#import <ShareSDKConnector/ShareSDKConnector.h>
+#import <ShareSDKUI/ShareSDK+SSUI.h>
+// 自定义分享菜单栏需要导入的头文件
+#import <ShareSDKUI/SSUIShareActionSheetStyle.h>
+//#自定义分享编辑界面所需要导入的头文件
+#import <ShareSDKUI/SSUIEditorViewStyle.h>
+
+@interface UGShareTofirViewController ()
+@property (strong,nonatomic)  NSString  * picURl;
+@property (strong ,nonatomic) NSString * urlShare;
+@property (strong,nonatomic)  NSString  * picshare;
+@property (strong,nonatomic) NSString * titl;
+@property (strong,nonatomic) NSString * desc;
+@end
+
+@implementation UGShareTofirViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self setCustomTitle:@"告诉朋友"];
+    [self loadRequest];
+}
+-(void)loadRequest{
+    
+    NSMutableDictionary * parmas = [NSMutableDictionary dictionary];
+  
+      [self setUpUI:_picURl];
+    parmas[@"token"] = kToken;
+    parmas[@"role"] = @"2";
+    [HttpClientManager postAsyn:UG_createQrcode_URL params:parmas success:^(id json) {
+        NSLog(@"%@",json);
+       _picURl = json[@"body"][@"qrcodeUrl"];
+        _picshare = json[@"body"][@"pic"];
+        _urlShare = json[@"body"][@"url"];
+        _titl = json[@"body"][@"title"];
+        _desc = json[@"body"][@"desc"];
+
+        [self setUpUI:_picURl];
+    } failure:^(NSError *error) {
+        
+    }];
+    
+    
+    
+}
+-(void)setUpUI:(NSString * )urlStr{
+    
+    UIImageView * imageView = [[UIImageView alloc]init];
+   // imageView.backgroundColor = [UIColor colorWithHexString:@"oooooo"];
+    [imageView sd_setImageWithURL:[NSURL URLWithString:urlStr] placeholderImage:[UIImage imageNamed:@""]];
+    imageView.frame = CGRectMake((kScreenWidth - 225)/2, kScreenHeight *0.146, 225, 225);
+    
+    [self.view addSubview:imageView ];
+    UILabel * worblable = [[UILabel alloc]init];
+    worblable.text = @"扫描上方二维码即可下载APP";
+    worblable.textAlignment = NSTextAlignmentCenter;
+    worblable.font = [UIFont systemFontOfSize:15];
+    worblable.frame =CGRectMake(kScreenWidth * 0.075, imageView.bottom + 15, kScreenWidth * 0.85, 16);
+    [self.view addSubview:worblable];
+    UIButton * button =[[UIButton alloc]init];
+    button.frame = CGRectMake(kScreenWidth * 0.075, worblable.bottom + 25, kScreenWidth * 0.85, 49);
+    button.backgroundColor = [UIColor colorWithHexString:@"#26bdab"];
+    
+    
+    [button setTitle:@"立即分享" forState:UIControlStateNormal];
+    
+    [button addTarget:self action:@selector(click_shark) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:button];
+}
+-(void)click_shark{
+    
+    
+    [self  shareWeiXin:_picURl];
+    
+}
+-(void)shareWeiXin:(NSString *)UrlStr
+{
+   
+    NSArray *imageArray;
+    if(UrlStr){
+        imageArray = @[_picshare];
+    }else
+        imageArray = @[@""];
+    
+    //imageArray = @[@"4"];
+    // [@"ShareDetailsModel"] model.text
+    // （//注意：图片必须要在Xcode左边目录里面，名称必须要传正确，如果要分享网络图片，可以这样传iamge参数 images:@[@"http://mob.com/Assets/images/logo.png?v=20150320"]）
+    if (imageArray) {
+//        NSString * strUrl = [NSString stringWithFormat:@"%@%@",UG_HOST,model.url];
+//        
+//        NSLog(@"%@",strUrl);
+//        
+        NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
+       
+        
+        [shareParams SSDKSetupShareParamsByText: _desc
+                                         images:imageArray
+                                            url:[NSURL URLWithString:_urlShare]
+                                          title: _titl
+                                           type:SSDKContentTypeAuto];
+        //2、分享（可以弹出我们的分享菜单和编辑界面）
+        
+        [ShareSDK showShareActionSheet:nil items:nil shareParams:shareParams onShareStateChanged:^(SSDKResponseState state, SSDKPlatformType platformType, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error, BOOL end) {
+            
+            switch (state) {
+                case SSDKResponseStateSuccess:
+                {
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"分享成功"
+                                                                        message:nil
+                                                                       delegate:nil
+                                                              cancelButtonTitle:@"确定"
+                                                              otherButtonTitles:nil];
+                    [alertView show];
+                    break;
+                }
+                case SSDKResponseStateFail:
+                {
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"分享失败"
+                                                                        message:[NSString stringWithFormat:@"%@", error]
+                                                                       delegate:nil
+                                                              cancelButtonTitle:@"确定"
+                                                              otherButtonTitles:nil];
+                    [alertView show];
+                    break;
+                }
+                case SSDKResponseStateCancel:
+                {
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"分享已取消"
+                                                                        message:nil
+                                                                       delegate:nil
+                                                              cancelButtonTitle:@"确定"
+                                                              otherButtonTitles:nil];
+                    [alertView show];
+                    break;
+                }
+                default:
+                    break;
+            }
+        }];
+    }
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

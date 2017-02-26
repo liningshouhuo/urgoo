@@ -1,0 +1,1038 @@
+//
+//  UGNewHomePageViewController.m
+//  UrgooApp
+//
+//  Created by UrgooDev on 16/7/7.
+//  Copyright © 2016年 Urgoo. All rights reserved.
+//
+
+#import "UGNewHomePageViewController.h"
+#import "Cycleview.h"
+#import "UGLIveTableViewCell.h"
+#import "UGLiveCollectionViewCell.h"
+#import "MyScheduleViewController.h"
+#import "UGCoustantListView.h"
+#import "BannerModel.h"
+#import "LiveZoomModel.h"
+#import "CounselorListModel.h"
+#import "UGConsultantLIstViewController.h"
+#import "UGSearchViewController.h"
+#import "UGLiveVideoesViewController.h"
+#import "UGCounselorDetailNewViewController.h"
+#import "ButtonModel.h"
+#import <SDWebImage/UIButton+WebCache.h>
+#import "UGLiveVideoDetailViewController.h"
+#import "SDCycleScrollView.h"
+#import "UGGotoH5ViewController.h"
+@interface UGNewHomePageViewController ()<UISearchControllerDelegate,UIScrollViewDelegate,SDCycleScrollViewDelegate>
+{
+     CAShapeLayer *lineLayer;
+//    UIView * alphaView;
+   // UIImageView * seachView;
+    UIView * seachbgView;
+    UIScrollView * liveScrollView;
+   ButtonModel * BUttonbutton;
+    UIView * Buttonview;
+   // SDCycleScrollView *cycleScrollView3;
+   
+}
+@property (strong,nonatomic) Cycleview * cycleView;
+@property (strong,nonatomic) UICollectionView * liveListView;
+@property(strong, nonatomic) UISearchController *searchController;
+@property(strong, nonatomic) UIButton * shoushuobutton;
+@property (strong,nonatomic) UIView * hideview;
+@property (strong,nonatomic) UIScrollView * scrollView;
+@property (strong,nonatomic) NSMutableArray * picUrlArray;
+@property (strong,nonatomic) NSMutableArray * liveListArray;
+@property (strong,nonatomic) NSMutableArray * recommendCounselor;
+@property (strong,nonatomic)  UIImageView * seachView;
+@property (strong,nonatomic) UIView * alphaView;
+@property (nonatomic,strong) ButtonModel * buttonModel;
+
+@property (strong,nonatomic) NSMutableArray * buttonArray;
+@property (strong,nonatomic) NSArray * bannerList;
+@property (strong,nonatomic) UIView * errorView;
+@property (strong,nonatomic) UIView *navbuttonView;
+@property (assign,nonatomic) int totleHight;
+@end
+
+@implementation UGNewHomePageViewController
+-(void)viewWillAppear:(BOOL)animated{
+   // [self needBackAction:NO];
+    [super viewWillAppear:YES];
+    [self.navigationController.navigationBar setTranslucent:YES];
+    
+    CGFloat offset = _scrollView.contentOffset.y;
+    
+    NSLog(@"%f",offset);
+    _alphaView.alpha = offset/100;
+
+     [self setseachViewUI];
+    
+}
+-(NSArray *)bannerList{
+    if (_bannerList == nil) {
+        _bannerList = [NSArray array];
+    }
+    
+    return _bannerList;
+    
+}
+-(NSMutableArray *)picUrlArray{
+    if (_picUrlArray == nil) {
+        _picUrlArray = [NSMutableArray array];
+    }
+    
+    return _picUrlArray;
+    
+}
+-(NSMutableArray *)liveListArray{
+    if (_liveListArray == nil) {
+        _liveListArray = [NSMutableArray array];
+    }
+    
+    return _liveListArray;
+    
+}
+-(NSMutableArray *)recommendCounselor{
+    if (_recommendCounselor == nil) {
+        _recommendCounselor = [NSMutableArray array];
+    }
+    
+    return _recommendCounselor;
+    
+}
+-(NSMutableArray *)buttonArray{
+    if (_buttonArray == nil) {
+        _buttonArray = [NSMutableArray array];
+    }
+    
+    return _buttonArray;
+    
+}
+
+-(UIImage*) createImageWithColor:(UIColor*) color
+{
+    CGRect rect=CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return theImage;
+}
+
+
+
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:YES];
+    _alphaView.alpha = 1.0;
+    [_seachView removeFromSuperview];
+    
+    //[alphaView removeFromSuperview];
+     //[self.navigationController.navigationBar setTranslucent:NO];
+    //[[[self.navigationController.navigationBar subviews] objectAtIndex:0] setAlpha:1];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self needBackAction:NO];
+   // [self setCustomTitle:@""];
+   
+    
+   [[[self.navigationController.navigationBar subviews] objectAtIndex:0] setAlpha:0.0];
+   _scrollView= [[UIScrollView alloc]init];
+    _scrollView.showsVerticalScrollIndicator = NO;
+    _scrollView.delegate = self;
+    _scrollView.bounces = NO;
+    //scrollView.backgroundColor = [UIColor redColor];
+    _scrollView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight);
+    [self.view addSubview:_scrollView];
+    [self loadRequest];
+   
+    
+    
+       self.view.backgroundColor = [UIColor colorWithHexString:@"#eeeeee"];
+    
+    
+    CGRect frame = self.navigationController.navigationBar.frame;
+    _alphaView = [[UIView alloc] initWithFrame:CGRectMake(0, -20, frame.size.width, frame.size.height+20)];
+    _alphaView.alpha = 0.0;
+    _alphaView.backgroundColor = [UIColor colorWithHexString:@"#26bdab"];
+    _alphaView.userInteractionEnabled = NO;
+    [self.navigationController.navigationBar insertSubview: _alphaView atIndex:0];
+    
+
+    //liveScrollView.frame = CGRectMake(0, kScreenWidth/3*2 +114 +38, kScreenWidth, 160);
+    
+    _hideview = [[UIView alloc]init];
+    _hideview.backgroundColor = RGB(236, 239, 239);
+    _hideview.frame = CGRectMake(kScreenWidth -4, kScreenWidth/3*2 +114 +38 , 200, 140);
+    [_scrollView addSubview:_hideview];
+    UILabel * liveMoreLable = [[UILabel alloc]init];
+    liveMoreLable.text = @"拖动查看更多";
+    liveMoreLable.numberOfLines = 0;
+    liveMoreLable.font = [UIFont systemFontOfSize:12];
+    liveMoreLable.frame = CGRectMake(5, 20, 13, 100);
+    
+    [_hideview addSubview:liveMoreLable];
+   lineLayer = [CAShapeLayer layer];
+    lineLayer.strokeColor = RGB(236, 239, 239).CGColor;
+    lineLayer.fillColor  = RGB(236, 239, 239).CGColor;
+    [_hideview.layer addSublayer:lineLayer];
+    _errorView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight -44)];
+    _errorView.hidden = YES;
+    _errorView.backgroundColor = [UIColor colorWithHexString:@"#eeeeee"];
+    UILabel * errorLable = [[UILabel alloc]init];
+    errorLable.text = @"网络错误，请重新加载";
+    errorLable.textAlignment = NSTextAlignmentCenter;
+    errorLable.frame = CGRectMake((kScreenWidth - 200)/2, 100, 200, 16);
+    errorLable.font = [UIFont systemFontOfSize:15];
+    [_errorView addSubview:errorLable];
+
+    UIImageView * errorimage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"on_netWork"]];
+    errorimage.frame = CGRectMake((kScreenWidth -120)/2, errorLable.origin.y + errorLable.size.height +10, 120, 120 *2);
+    
+    [_errorView addSubview:errorimage];
+    
+    UIButton * relodbutton = [[UIButton alloc]init];
+    relodbutton.backgroundColor = [UIColor colorWithHexString:@"#26bdab"];
+    relodbutton.frame = CGRectMake((kScreenWidth - 150)/2, errorimage.origin.y + errorimage.size.height +10, 150, 50);
+    relodbutton.layer.cornerRadius = 9;
+    [relodbutton setTitle:@"重新加载" forState:UIControlStateNormal];
+    [relodbutton addTarget:self action:@selector(Click_reload_Btn) forControlEvents: UIControlEventTouchUpInside];
+    
+    [_errorView addSubview:relodbutton];
+    [self.view addSubview:_errorView];
+    [self.view bringSubviewToFront:_errorView];
+    
+    
+
+
+  }
+-(void)Click_reload_Btn{
+    
+    
+    [[AppDelegate sharedappDelegate] showTabBar];
+
+}
+//网络请求加载数据
+
+-(void)loadRequest{ //UG_CounselorBannerList_URL
+    NSMutableDictionary * params =[NSMutableDictionary dictionary];
+    //params[@"token"] = kToken;
+    //banner
+    NSLog(@"开始请求数据");
+    [SVProgressHUD showWithStatus:@"loading..."];
+        [HttpClientManager getAsyn:UG_selectBannerList_URL params:params success:^(id json) {
+        self.bannerList = json[@"body"][@"bannerList"];
+        
+            [SVProgressHUD dismiss];
+        for (NSDictionary * dict in self.bannerList) {
+            BannerModel * bannermodel = [BannerModel mj_objectWithKeyValues:dict];
+            [self.picUrlArray addObject:bannermodel.picUrl];
+        }
+        
+                [self setCycleViewUI];
+        
+            
+      
+       // NSLog(@"%@",self.picUrlArray);
+    } failure:^(NSError *error) {
+       // NSLog(@"%@",error);
+         [SVProgressHUD dismiss];
+          NSLog(@"请求数据失败");
+        if (_errorView.hidden) {
+            _errorView.hidden = NO;
+            _seachView.hidden = YES;
+            _navbuttonView.hidden = YES;
+        }
+    }];
+//    //button
+//    [SVProgressHUD showWithStatus:@"loading..."];
+//    [HttpClientManager postAsyn:UG_CounselorBannerList_URL params:params success:^(id json) {
+//
+//        [SVProgressHUD dismiss];
+//        NSArray * array = [NSArray arrayWithArray:json[@"body"][@"counselorBannerList"]];
+//
+//        for (NSDictionary * dict  in array) {
+//            _buttonModel = [ButtonModel mj_objectWithKeyValues:dict];
+//            [self.buttonArray addObject:_buttonModel];
+//        }
+//        
+//        [self setBUttonUI];
+//     } failure:^(NSError *error) {
+//         [SVProgressHUD dismiss];
+//         if (_errorView.hidden) {
+//             _errorView.hidden = NO;
+//             _seachView.hidden = YES;
+//             _navbuttonView.hidden = YES;
+//         }
+//
+//    }];
+    
+
+    
+    //直播
+//    [SVProgressHUD showWithStatus:@"loading..."];
+//    [HttpClientManager postAsyn:UG_selectZoomLiveList_URL params:params success:^(id json) {
+//        [SVProgressHUD dismiss];
+//       NSLog(@"%@",json);
+//        NSArray * liveArray = json[@"body"][@"liveList"];
+//        for (NSDictionary * dict in liveArray) {
+//            LiveZoomModel * model = [LiveZoomModel mj_objectWithKeyValues:dict];
+//            [self.liveListArray addObject:model];
+//        }
+//        
+//        [self setLiveListUI];
+//      
+//    } failure:^(NSError *error) {
+//        
+//        [SVProgressHUD dismiss];
+//        if (_errorView.hidden) {
+//            _errorView.hidden = NO;
+//            _seachView.hidden = YES;
+//            _navbuttonView.hidden = YES;
+//        }
+//
+//       
+//    }];
+   //顾问
+    NSMutableDictionary * params1 = [NSMutableDictionary dictionary];
+    params1[@"token"]= kToken;
+    [HttpClientManager postAsyn:UG_getMyCounselorListTop_URL params:params1 success:^(id json) {
+        if([json[@"header"][@"code"]  isEqualToString:@"200"]){
+            
+            NSArray * tuijian  = json[@"body"][@"counselorListInfoList"];
+            for (NSDictionary * dict in tuijian) {
+                CounselorListModel * model = [CounselorListModel mj_objectWithKeyValues:dict];
+                [self.recommendCounselor addObject:model];
+            }
+            //coutanthight +28 +40  + 318 * self.recommendCounselor.count
+            _scrollView.contentSize = CGSizeMake(0,kScreenWidth/3*2 + 114 + 38 + 170 +28 +40 + 328 * self.recommendCounselor.count + 80);
+            [self setcoutantUI];
+            
+            
+            
+        }
+     
+      
+           } failure:^(NSError *error) {
+               
+               [SVProgressHUD dismiss];
+               if (_errorView.hidden) {
+                   _errorView.hidden = NO;
+                   _seachView.hidden = YES;
+                   _navbuttonView.hidden = YES;
+               }
+
+      
+    }];
+
+    
+    
+}
+//设置搜索UI
+-(void)setseachViewUI{
+    
+   
+    _seachView  = [[UIImageView alloc]initWithFrame:CGRectMake((kScreenWidth - 240)/2, 10, 240, 25)];
+    _seachView.hidden = NO;
+    if (_scrollView.contentOffset.y > 100) {
+         _seachView.image = [UIImage imageNamed:@"seachView_2"];
+    }else{
+        
+        _seachView.image = [UIImage imageNamed:@"soushou_newhome"];
+    }
+    //[bottomView addGestureRecognizer:contactRecognizer];
+    UIImageView * fangdajing = [[UIImageView alloc]initWithFrame:CGRectMake(10, 5, 12, 15)];
+    fangdajing.image = [UIImage imageNamed:@"fangdajing_newpage"];
+    [_seachView addSubview:fangdajing];
+    UILabel * seachLable = [[UILabel alloc]initWithFrame:CGRectMake(30, 5, 120, 15)];
+    seachLable.text = @"请输入顾问的姓名";
+    seachLable.font = [UIFont systemFontOfSize:12];
+    seachLable.textColor = [UIColor colorWithHexString:@"#cfcfcf"];
+    seachLable.textAlignment = NSTextAlignmentLeft;
+    [_seachView addSubview:seachLable];
+    
+    
+    [self.navigationController.navigationBar addSubview:_seachView];
+     _navbuttonView = [[UIView alloc] initWithFrame:CGRectMake(30, 0, kScreenWidth - 60, 44)];
+    
+    UIButton *exampleButton1 = [UIButton buttonWithType:UIButtonTypeCustom];
+    exampleButton1.frame = CGRectMake(0, 2, kScreenWidth, 40);
+    [exampleButton1 addTarget:self action:@selector(clickTestBTn) forControlEvents:UIControlEventTouchUpInside];
+    exampleButton1.backgroundColor = [UIColor clearColor];
+    [_navbuttonView addSubview:exampleButton1];
+//    UIButton *exampleButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
+//    //exampleButton2.frame = CGRectMake(70, 2, 30, 40);
+//    [exampleButton2 addTarget:self action:@selector(clickTestBTn) forControlEvents:UIControlEventTouchUpInside];
+//    exampleButton2.backgroundColor = [UIColor redColor];
+    
+    //[buttonView addSubview:exampleButton2];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_navbuttonView];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_navbuttonView];
+    _navbuttonView.hidden = NO;
+  //[[UIApplication sharedApplication].keyWindow bringSubviewToFront:seachbgView];
+}
+//当返回的图片是一的时候；
+
+
+
+
+
+//图片轮播
+-(void)setCycleViewUI{
+    
+    
+    
+    
+    
+    SDCycleScrollView *cycleScrollView3 = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenWidth * 2/3) delegate:self placeholderImage:[UIImage imageNamed:@"new_page_banner_pls"]];
+    cycleScrollView3.currentPageDotImage = [UIImage imageNamed:@"banner_select"];
+    cycleScrollView3.pageDotImage = [UIImage imageNamed:@"banner_nomor"];
+    cycleScrollView3.imageURLStringsGroup = self.picUrlArray;
+   [_scrollView addSubview:cycleScrollView3];
+    
+    
+}
+#pragma mark - SDCycleScrollViewDelegate
+
+- (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index
+{
+    NSLog(@"---点击了第%ld张图片", (long)index);
+    
+            if ([kToken isEqualToString:@""] || !kToken) {
+                LoginViewController *loginVC = [[LoginViewController alloc]init];
+                loginVC.hidesBottomBarWhenPushed = YES;
+                UGNavigationController *loginNav = [[UGNavigationController alloc] initWithRootViewController:loginVC];
+              
+                [self.navigationController presentViewController:loginNav animated:YES completion:nil];
+    
+            }else{
+    
+                     NSString * bIndexStr =  [NSString stringWithFormat:@"%ld",(long)index];
+            int bnnerindexInt = [bIndexStr intValue];
+    
+             BannerModel * bannermodel = [BannerModel mj_objectWithKeyValues:self.bannerList[bnnerindexInt]];
+            if ([bannermodel.type isEqualToString:@"1"]) {
+                NSLog(@"%@",bannermodel.targetId);
+                //跳掉H5
+                self.alphaView.alpha = 1.0;
+                [self.seachView removeFromSuperview];
+                NSString * urlstr =bannermodel.targetId;
+                UGGotoH5ViewController * vc = [[UGGotoH5ViewController alloc]init];
+               // vc.titlele = @"帮助";
+                vc.urlstr = urlstr;
+                vc.hidesBottomBarWhenPushed = YES;
+                [self pushToNextViewController:vc];
+                
+                
+    
+    
+            }else if ([bannermodel.type isEqualToString:@"2"]){
+                NSLog(@"%@",bannermodel.targetId);
+                //跳到直播
+                self.alphaView.alpha = 1.0;
+                [self.seachView removeFromSuperview];
+                UGLiveVideoDetailViewController * vc = [[UGLiveVideoDetailViewController alloc]init];
+                vc.byHome = @"001";
+                vc.liveId = bannermodel.targetId;
+                vc.hidesBottomBarWhenPushed =YES;
+    
+                [self pushToNextViewController:vc];
+    
+    
+            }else if ([bannermodel.type isEqualToString:@"3"]){
+                NSLog(@"%@",bannermodel.targetId);
+                //跳到顾问
+                self.alphaView.alpha = 1.0;
+                [self.seachView removeFromSuperview];
+    
+    
+                UGCounselorDetailNewViewController * counselorDetailNewVC = [[UGCounselorDetailNewViewController alloc]init];
+    
+                counselorDetailNewVC.hidesBottomBarWhenPushed = YES;
+    
+               counselorDetailNewVC.counselorId = bannermodel.targetId;
+    
+    
+                [self.navigationController pushViewController:counselorDetailNewVC animated:YES];
+                
+                
+                
+                
+    
+            }
+            
+            
+            }
+            
+            
+
+    
+    
+    
+    }
+
+#pragma mark 按钮UI
+-(void)setBUttonUI{
+       Buttonview= [[UIView alloc]initWithFrame:CGRectMake(0, kScreenWidth *2/3, kScreenWidth, 114)];
+    Buttonview.backgroundColor = [UIColor whiteColor];
+    for (int i = 0; i<self.buttonArray.count; i++) {
+         BUttonbutton = [ButtonModel mj_objectWithKeyValues:self.buttonArray[i]];
+        UIButton * button = [[UIButton alloc]init];
+       // UIImage * image = [[UIImage alloc]init];
+        //[button.imageView sd_setImageWithURL:[NSURL URLWithString:model.picUrl]];
+        //[button sd_setBackgroundImageWithURL:[NSURL URLWithString:model.picUrl] forState:UIControlStateNormal];
+        button.tag = 10 +i;
+        UILabel * lable = [[UILabel alloc]init];
+       lable.text= BUttonbutton.des;
+        lable.font = [UIFont systemFontOfSize:12];
+        lable.frame = CGRectMake(kScreenWidth/3 * i + 30, 79, 90, 14);
+        lable.textAlignment = NSTextAlignmentCenter;
+         lable.centerX = kScreenWidth/3/2 + kScreenWidth/3*i;
+        [Buttonview addSubview:lable];
+        UIImageView * buttonimageView =[[UIImageView alloc]init];
+        [buttonimageView sd_setImageWithURL:[NSURL URLWithString:BUttonbutton.picUrl] placeholderImage:[UIImage imageNamed:@"new_page_btnicon_pls"]];
+        [Buttonview addSubview:buttonimageView];
+        
+        
+        if (i == 0) {
+         buttonimageView.frame = CGRectMake(kScreenWidth/3 * i + 30, 25, 50, 50);
+            buttonimageView.centerX = kScreenWidth/3/2;
+        }else if (i == 1){
+            buttonimageView.frame = CGRectMake(kScreenWidth/3 * i + 30, 25, 50, 50);
+            buttonimageView.centerX = kScreenWidth/3/2 + kScreenWidth/3*i;
+
+        }else if (i == 2){
+            buttonimageView.frame = CGRectMake(kScreenWidth/3 * i + 30, 25, 50, 50);
+            buttonimageView.centerX = kScreenWidth/3/2 + kScreenWidth/3 *i;
+        }
+        
+        button.frame = CGRectMake(kScreenWidth/3 * i, 19, kScreenWidth/3, 114);
+        [button addTarget:self action:@selector(click_banner_btn:) forControlEvents:    UIControlEventTouchUpInside];
+        [Buttonview addSubview:button];
+    }
+
+    
+    
+    [_scrollView addSubview:Buttonview];
+    
+    
+  
+    
+    
+}
+#pragma mark 直播
+-(void)setLiveListUI{
+    
+    UILabel * urgoolive =[[UILabel alloc]init];
+    
+    urgoolive.text = @"优顾直播";
+    urgoolive.font = [UIFont systemFontOfSize:16];
+    urgoolive.textColor = [UIColor colorWithHexString:@"#343434"];
+    urgoolive.frame = CGRectMake((kScreenWidth - 65)/2, kScreenWidth/3*2 +114 +10 +5, 65, 18);
+    UIImageView * triangleImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"triangleImage"]];
+    triangleImage.frame = CGRectMake((kScreenWidth - 65)/2+67,kScreenWidth/3*2 +114 +14 +5, 8, 8);
+    UIButton * liveButton = [[UIButton alloc]init];
+    liveButton.backgroundColor = [UIColor clearColor];
+    liveButton.frame = CGRectMake((kScreenWidth - 65)/2, kScreenWidth/3*2 +114 +10 +3, 75, 25);
+    [liveButton addTarget:self action:@selector(click_live_btn) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    
+    [_scrollView addSubview:urgoolive];
+   [_scrollView addSubview:triangleImage];
+    [_scrollView addSubview:liveButton];
+    liveScrollView = [[UIScrollView alloc]init];
+    liveScrollView.frame = CGRectMake(0, kScreenWidth/3*2 +114 +38 , kScreenWidth, 160);
+    liveScrollView.contentSize = CGSizeMake( 210 * self.liveListArray.count, 0);
+    liveScrollView.backgroundColor = [UIColor colorWithHexString:@"#ffffff"];
+    liveScrollView.delegate =self;
+    liveScrollView.showsHorizontalScrollIndicator =NO;
+    //liveScrollView.userInteractionEnabled = YES;
+  [_scrollView addSubview:liveScrollView];
+    
+   [_scrollView insertSubview:_hideview aboveSubview:liveScrollView];
+    //(@"%lu",(unsigned long)self.liveListArray.count);
+    for (NSInteger i = 0; i<self.liveListArray.count; i++) {
+        UIImageView * liveImageView = [[UIImageView alloc]init];
+                
+        
+        //liveImageView.backgroundColor = [UIColor redColor];
+       LiveZoomModel * model  = self.liveListArray[i];
+       // NSString * str = [NSString stringWithFormat:@"%@%@",UG_HOST1,model.masterPic];
+        
+        
+        [liveImageView sd_setImageWithURL:[NSURL URLWithString:model.masterPic] placeholderImage:[UIImage imageNamed:@"new_page_live"]];
+       // liveImageView.image = [UIImage imageNamed:@"mengcong"];
+        liveImageView.frame = CGRectMake(10 + 210 * i, 20, 200, 120);
+        liveImageView.layer.cornerRadius = 6.0f;
+        liveImageView.clipsToBounds = YES;
+        
+        [liveScrollView addSubview:liveImageView];
+        
+        UIView * BGView = [[UIView alloc]init];
+       
+        BGView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+        BGView.frame = CGRectMake(0, 0, 200, 120);
+//        UITapGestureRecognizer * contecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(click_LiveImage)];
+//        
+//        [BGView addGestureRecognizer:contecognizer];
+//        
+
+        [liveImageView addSubview:BGView];
+        UILabel * lable1 = [[UILabel alloc]init];
+        lable1.text = model.title;
+        
+        lable1.textColor = [UIColor whiteColor];
+        lable1.font = [UIFont systemFontOfSize:16];
+         lable1.textAlignment = NSTextAlignmentCenter;
+        //CGSize sizelable1 = [lable1.text sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:lable1.font,NSFontAttributeName, nil]];
+            //lable1.size = CGSizeMake(sizelable1.width, 18);
+       lable1.frame = CGRectMake(0, 43, 200, 18);
+        [BGView addSubview:lable1];
+        UILabel * lable2 = [[UILabel alloc]init];
+        lable2.text = model.titleSub;
+        lable2.textColor = [UIColor whiteColor];
+        lable2.font = [UIFont systemFontOfSize:14];
+        lable2.textAlignment = NSTextAlignmentCenter;
+       // CGSize size = [lable2.text sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:lable2.font,NSFontAttributeName, nil]];
+
+        lable2.frame = CGRectMake(0 , 70, 200, 14);
+//        lable2.centerX = 0;
+//        lable2.centerY = 70;
+//        lable2.size = CGSizeMake(size.width, size.height);
+        [BGView addSubview:lable2];
+        
+        
+        
+        UIButton * Bgbutton = [[UIButton alloc]init];
+        Bgbutton.tag = 20 +i;
+        Bgbutton .frame =CGRectMake(10 + 210 * i, 20, 200, 120);
+        Bgbutton.backgroundColor = [UIColor clearColor];
+        
+        
+        [Bgbutton addTarget:self action:@selector(click_LiveImage:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [liveScrollView addSubview:Bgbutton];
+        [liveScrollView bringSubviewToFront:Bgbutton];
+        
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+}
+//跳到直播列表
+
+-(void)click_live_btn{
+    
+    
+    //[[AppDelegate sharedappDelegate] showTabBar];
+    if ([kToken isEqualToString:@""] || !kToken) {
+        LoginViewController *loginVC = [[LoginViewController alloc]init];
+        loginVC.hidesBottomBarWhenPushed = YES;
+        UGNavigationController *loginNav = [[UGNavigationController alloc] initWithRootViewController:loginVC];
+        [self.navigationController presentViewController:loginNav animated:YES completion:nil];
+        
+    }else{
+        
+        NSLog(@"%@",kToken);
+        [self.seachView removeFromSuperview];
+        
+        UGLiveVideoesViewController *liveVideoesVC = [[UGLiveVideoesViewController alloc]init];
+        liveVideoesVC.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:liveVideoesVC animated:YES];
+        _alphaView.alpha =1.0;
+    }
+    
+ 
+    
+    
+}
+//跳到直播
+-(void)click_LiveImage:(UIButton * )sender{
+
+    if ([kToken isEqualToString:@""] || !kToken) {
+        LoginViewController *loginVC = [[LoginViewController alloc]init];
+        loginVC.hidesBottomBarWhenPushed = YES;
+        UGNavigationController *loginNav = [[UGNavigationController alloc] initWithRootViewController:loginVC];
+        [self.navigationController presentViewController:loginNav animated:YES completion:nil];
+        
+    }else{
+        
+        
+        NSString * tagStr = [NSString stringWithFormat:@"%ld",(long)sender.tag];
+        int tagInt = [tagStr intValue] - 20;
+        
+        LiveZoomModel * model = [LiveZoomModel mj_objectWithKeyValues:self.liveListArray[tagInt]];
+        
+        [self.seachView removeFromSuperview];
+        
+        self.alphaView.alpha =1;
+        UGLiveVideoDetailViewController *liveDtlVC = [[UGLiveVideoDetailViewController alloc]init];
+        liveDtlVC.liveId = model.liveId;
+        liveDtlVC.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:liveDtlVC animated:YES];
+        
+            }
+    
+    
+
+    
+    
+    
+}
+// 顾问 界面
+-(void)setcoutantUI{
+    //CGFloat coutanthight = kScreenWidth/3*2 + 114 + 38 + 170;
+    CGFloat coutanthight = kScreenWidth * 2/3 +20;
+    UILabel * recommendLable = [[UILabel alloc]init];
+    
+    recommendLable.text = @"为您推荐";
+    recommendLable.font = [UIFont systemFontOfSize:16];
+    recommendLable.textColor = [UIColor colorWithHexString:@"#343434"];
+    
+    recommendLable.frame = CGRectMake((kScreenWidth - 65)/2,coutanthight +10, 65, 18);
+
+    [_scrollView addSubview:recommendLable];
+    
+    for (int i = 0; i<self.recommendCounselor.count; i++) {
+        
+        UGCoustantListView * firstView = [[UGCoustantListView alloc]
+                                          init];
+        firstView.ListModel = self.recommendCounselor[i];
+        NSLog(@"%d =====%d",firstView.viewhight,_totleHight);
+        if (i == 0) {
+             firstView.frame = CGRectMake(0, coutanthight +28 , kScreenWidth, firstView.viewhight);
+        }else{
+             firstView.frame = CGRectMake(0, coutanthight +28 +_totleHight , kScreenWidth, firstView.viewhight);
+            
+        }
+       
+        _totleHight +=firstView.viewhight;
+        //firstView.frame = CGRectMake(0, 560 + 318 * i, kScreenWidth, firstView.viewhight);
+        //firstView.height = firstView.viewhight;
+        
+        __weak  UGNewHomePageViewController * weakself = self;
+        firstView.CoustantBlock = ^( NSString * counselorId){
+            
+            if ([kToken isEqualToString:@""] || !kToken) {
+                LoginViewController *loginVC = [[LoginViewController alloc]init];
+                loginVC.hidesBottomBarWhenPushed = YES;
+                UGNavigationController *loginNav = [[UGNavigationController alloc] initWithRootViewController:loginVC];
+                [weakself.navigationController presentViewController:loginNav animated:YES completion:nil];
+                
+            }else{
+                
+                NSLog(@"%@",kToken);
+                
+                
+                
+                [weakself.seachView removeFromSuperview];
+                
+                weakself.alphaView.alpha =0;
+                
+                UGCounselorDetailNewViewController * counselorDetailNewVC = [[UGCounselorDetailNewViewController alloc]init];
+                counselorDetailNewVC.counselorId =counselorId;
+                NSLog(@"counselorId===%@",counselorId);
+                counselorDetailNewVC.hidesBottomBarWhenPushed = YES;
+                [weakself.navigationController pushViewController:counselorDetailNewVC animated:YES];
+                
+                
+                
+                          }
+            
+            
+            
+        };
+
+            
+        
+        [_scrollView addSubview:firstView];
+    }
+     
+    //查看所有顾问按钮
+    UIButton * button = [[UIButton alloc]init];
+    button.backgroundColor = [UIColor colorWithHexString:@"#26bdab"];
+    [button setTitle:@"查看所有顾问" forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont systemFontOfSize:12];
+    [button addTarget:self action:@selector(Click_allCous) forControlEvents: UIControlEventTouchUpInside  ];
+    button.layer.cornerRadius = 14;
+    button.frame = CGRectMake((kScreenWidth - 111)/2, coutanthight +28  +_totleHight  +25 , 111, 28);
+    
+    [_scrollView addSubview:button];
+    
+     _scrollView.contentSize = CGSizeMake(0,coutanthight +28 +40  +_totleHight +30 +40);
+    
+}
+
+//产看你更多顾问
+-(void)Click_allCous{
+    //(@"dadassd");
+    if ([kToken isEqualToString:@""] || !kToken) {
+        LoginViewController *loginVC = [[LoginViewController alloc]init];
+        loginVC.hidesBottomBarWhenPushed = YES;
+        UGNavigationController *loginNav = [[UGNavigationController alloc] initWithRootViewController:loginVC];
+        [self.navigationController presentViewController:loginNav animated:YES completion:nil];
+        
+    }else{
+        
+        [_seachView removeFromSuperview];
+        _alphaView.alpha = 1;
+        
+        UGConsultantLIstViewController * vc= [[UGConsultantLIstViewController alloc]init];
+        
+        vc.hidesBottomBarWhenPushed = YES;
+        [self pushToNextViewController:vc];
+        
+                }
+    
+    
+    
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+   CGFloat  offset =  liveScrollView.contentOffset.x;
+    CGFloat  offsety =  _scrollView.contentOffset.y;
+    //(@"scrollView.co====%f",offset);
+//    
+    CGFloat setAlpha = offsety/200;
+   
+    if (scrollView ==_scrollView ) {
+        
+        if (offsety < 100) {
+            _seachView.image = [UIImage imageNamed:@"soushou_newhome"];
+            
+            //        [[[self.navigationController.navigationBar subviews] objectAtIndex:0] setAlpha:setAlpha];
+            _alphaView.alpha = setAlpha;
+        }else if(offsety > 100) {
+            
+            _alphaView.alpha = setAlpha;
+            _seachView.image = [UIImage imageNamed:@"seachView_2"];
+            
+            
+        }
+        
+    }
+   
+    if (scrollView == liveScrollView) {
+        
+        CGFloat  maxSize = liveScrollView.contentSize.width - kScreenWidth;
+        if (offset > maxSize) {
+            //_alphaView.alpha = 1.0;  CGRectMake(kScreenWidth -4, kScreenWidth/3*2 +114 +38 , 200, 140);
+            _hideview.frame = CGRectMake(kScreenWidth - offset + maxSize , kScreenWidth/3*2 +114 +38, 150 , 150);
+            // _hideview.layer.cornerRadius = offset - 245;
+            lineLayer.path = [self getLeftLinePathWithAmount: maxSize - offset withY:75];
+            if (offset > maxSize +20) {
+                _hideview.frame = CGRectMake(kScreenWidth - 20 , kScreenWidth/3*2 +114 +38, 150 , 150);
+            }
+        }else{
+            _hideview.frame = CGRectMake(kScreenWidth +2 , kScreenWidth/3*2 +114 +38, 150 , 150);
+        }
+    }
+    
+}
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
+{
+    //(@"scrollViewDidEndDragging");
+    CGFloat  offset =  scrollView.contentOffset.x;
+    //(@"scrollViewDidEndDragging %f",offset);
+    if  (self.liveListArray.count >0) {
+        if (self.liveListArray.count >1) {
+            
+            if (offset > liveScrollView.contentSize.width - kScreenWidth + 50) {
+                lineLayer.path = [self getLeftLinePathWithAmount: 0 withY:75];
+                
+                if ([kToken isEqualToString:@""] || !kToken) {
+                    LoginViewController *loginVC = [[LoginViewController alloc]init];
+                    loginVC.hidesBottomBarWhenPushed = YES;
+                    UGNavigationController *loginNav = [[UGNavigationController alloc] initWithRootViewController:loginVC];
+                    [self.navigationController presentViewController:loginNav animated:YES completion:nil];
+                    
+                }else{
+                    
+                    NSLog(@"%@",kToken);
+                    [self.seachView removeFromSuperview];
+                    
+                    UGLiveVideoesViewController *liveVideoesVC = [[UGLiveVideoesViewController alloc]init];
+                    liveVideoesVC.hidesBottomBarWhenPushed = YES;
+                    [self.navigationController pushViewController:liveVideoesVC animated:YES];
+                    _alphaView.alpha =1.0;
+                }
+                
+                
+            }
+        }
+    
+    }
+}
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
+{
+    
+    CGFloat  offset =  scrollView.contentOffset.x;
+    //(@"scrollViewDidEndDecelerating----%f",offset);
+     //_hideview.frame = CGRectMake(kScreenWidth - 20 , 375, 150 , 100);
+   
+}
+//跳转到 搜索界面
+-(void)click_shoushuoBtn{
+    [_seachView removeFromSuperview];
+    
+}
+
+
+- (CGPathRef) getLeftLinePathWithAmount:(CGFloat)amount withY:(CGFloat)amountY {
+    UIBezierPath *verticalLine = [UIBezierPath bezierPath];
+    CGPoint topPoint = CGPointMake(0, 0);
+    CGPoint midControlPoint = CGPointMake(amount, amountY);
+    CGPoint bottomPoint = CGPointMake(0, 150);
+    
+    [verticalLine moveToPoint:topPoint];
+    [verticalLine addQuadCurveToPoint:bottomPoint controlPoint:midControlPoint];
+    [verticalLine closePath];
+    
+    return [verticalLine CGPath];
+}
+#pragma mark 点击搜索
+-(void)clickTestBTn{
+    if ([kToken isEqualToString:@""] || !kToken) {
+        LoginViewController *loginVC = [[LoginViewController alloc]init];
+        loginVC.hidesBottomBarWhenPushed = YES;
+        UGNavigationController *loginNav = [[UGNavigationController alloc] initWithRootViewController:loginVC];
+        [self.navigationController presentViewController:loginNav animated:YES completion:nil];
+        
+    }else{
+        
+        NSLog(@"%@",kToken);
+        [_seachView removeFromSuperview];
+        _alphaView.alpha = 1;
+        UGSearchViewController * vc = [[UGSearchViewController alloc]init];
+        vc.hidesBottomBarWhenPushed = YES;
+        
+        
+        [self pushToNextViewController:vc];
+        
+          }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}
+-(void)click_cancleBtn{
+//    [UIView animateWithDuration:0.1 animations:^{
+//        
+//        // 设置view弹出来的位置
+//        
+//        seachbgView.frame = CGRectMake(0, kScreenHeight, kScreenWidth, kScreenHeight);
+//        
+//    }];
+  [UIView animateWithDuration:0.1 animations:^{
+      
+      // 设置view弹出来的位置
+      
+      seachbgView.frame = CGRectMake(0, kScreenHeight, kScreenWidth, kScreenHeight);
+
+  } completion:^(BOOL finished) {
+      [seachbgView removeFromSuperview];
+  }];
+    
+}
+-(void)clicksrechRecognizer{
+    
+    MyScheduleViewController * vc =[[MyScheduleViewController alloc]init];
+    //[seachView removeFromSuperview];
+    [self.navigationController pushViewController:vc animated:YES];
+    
+    
+}
+//#ifdef __IPHONE_7_0
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+//    if (_statusBarStyleControl) {
+        return UIStatusBarStyleDefault;
+//    }
+//    else {
+      //  return UIStatusBarStyleLightContent;
+//    }
+}
+- (BOOL)prefersStatusBarHidden
+{
+    return NO;
+}
+
+-(void)click_banner_btn:(UIButton *)sender{
+    if ([kToken isEqualToString:@""] || !kToken) {
+        LoginViewController *loginVC = [[LoginViewController alloc]init];
+        loginVC.hidesBottomBarWhenPushed = YES;
+        UGNavigationController *loginNav = [[UGNavigationController alloc] initWithRootViewController:loginVC];
+        [self.navigationController presentViewController:loginNav animated:YES completion:nil];
+        
+    }else{
+        
+        NSLog(@"%@",kToken);
+      
+        [self.seachView removeFromSuperview];
+        
+        //    self.alphaView.alpha =1;
+        //
+        //    UGCounselorDetailNewViewController * counselorDetailNewVC = [[UGCounselorDetailNewViewController alloc]init];
+        //    counselorDetailNewVC.hidesBottomBarWhenPushed = YES;
+        //    [self.navigationController pushViewController:counselorDetailNewVC animated:YES];
+        
+        NSInteger tag = sender.tag  -10;
+        
+        ButtonModel * model = [ButtonModel mj_objectWithKeyValues:self.buttonArray[tag]];
+        
+        _alphaView.alpha = 1;
+        NSInteger i = sender.tag - 10;
+         BUttonbutton = [ButtonModel mj_objectWithKeyValues:self.buttonArray[i]];
+        UGConsultantLIstViewController * vc= [[UGConsultantLIstViewController alloc]init];
+        
+        
+        vc.btnTitle = BUttonbutton.des;
+        vc.serviceType = model.type;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self pushToNextViewController:vc];
+        
+    }
+
+    
+
+    
+}
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

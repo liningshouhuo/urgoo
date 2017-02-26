@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/urgoo/!svn/ver/3070/Apps/IOS/UrgooParentsApp/UrgooApp/Utils
+END
+UserProfileManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/UserProfileManager.h
+END
+PhotoUtil.m
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/PhotoUtil.m
+END
+UserProfileManager.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/UserProfileManager.m
+END
+StringHelper.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/urgoo/!svn/ver/2749/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/StringHelper.h
+END
+UGCommanControl.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/UGCommanControl.h
+END
+HttpClientManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/HttpClientManager.h
+END
+CustomHelper.h
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/CustomHelper.h
+END
+LocalSubstitutionCache.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/LocalSubstitutionCache.h
+END
+StringHelper.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/urgoo/!svn/ver/2749/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/StringHelper.m
+END
+UGCommanControl.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/UGCommanControl.m
+END
+HttpClientManager.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/urgoo/!svn/ver/3070/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/HttpClientManager.m
+END
+RegularExpressionUtil.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/RegularExpressionUtil.h
+END
+CustomHelper.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/CustomHelper.m
+END
+ChatHelper.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/ChatHelper.h
+END
+LocalSubstitutionCache.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/LocalSubstitutionCache.m
+END
+RegularExpressionUtil.m
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/RegularExpressionUtil.m
+END
+ChatHelper.m
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/urgoo/!svn/ver/2524/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/ChatHelper.m
+END
+PhotoUtil.h
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/urgoo/!svn/ver/2299/Apps/IOS/UrgooParentsApp/UrgooApp/Utils/PhotoUtil.h
+END
